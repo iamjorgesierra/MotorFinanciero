@@ -1,27 +1,39 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unused_import
 
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 class ApiController {
   final String baseUrl;
   final String apiKey;
+  final http.Client _client = http.Client();
 
   ApiController({required this.baseUrl, required this.apiKey});
 
   Future<Map<String, dynamic>> obtenerDatosFinancieros({
-    required String fromCurrency,
-    required String toCurrency,
+    required String function,
+    required String symbol,
+    String outputSize = 'compact',
+    String dataType = 'json',
   }) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/query?function=CURRENCY_EXCHANGE_RATE'
-          '&from_currency=$fromCurrency&to_currency=$toCurrency&apikey=$apiKey'),
-    );
+    String apiUrl =
+        '$baseUrl?function=$function&symbol=$symbol&outputsize=$outputSize&datatype=$dataType&apikey=$apiKey';
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Error al obtener datos financieros');
+    try {
+      final response = await _client.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Fallo al obtener los datos');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
     }
+  }
+
+  double generarDatoAleatorio() {
+    // Generar datos aleatorios para simular variación
+    return Random().nextDouble() * 10.0;
   }
 }

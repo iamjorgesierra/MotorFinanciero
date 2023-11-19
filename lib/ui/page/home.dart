@@ -46,7 +46,8 @@ class Home extends StatelessWidget {
                   const SizedBox(height: 400),
                   ElevatedButton(
                     onPressed: () {
-                      Get.to(const MiPantalla()); // Botón para ir al menú
+                      Get.to(() => const MiPantalla());
+                      // Botón para ir al menú
                     },
                     style: ElevatedButton.styleFrom(
                       // ignore: deprecated_member_use
